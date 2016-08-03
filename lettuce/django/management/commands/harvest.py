@@ -227,6 +227,7 @@ class Command(BaseCommand):
                                 subunit_filename=options.get('subunit_file'),
                                 jsonreport_filename=options.get('jsonreport_file'),
                                 tags=tags, failfast=failfast, auto_pdb=auto_pdb,
+                                root_dir=path,
                                 smtp_queue=smtp_queue)
 
                 result = runner.run()
