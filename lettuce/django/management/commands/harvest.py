@@ -143,12 +143,12 @@ class Command(BaseCommand):
 
     def get_paths(self, args, apps_to_run, apps_to_avoid):
         if args:
+            paths = []
             for path, exists in zip(args, map(os.path.exists, args)):
                 if not exists:
                     sys.stderr.write("You passed the path '%s', but it does not exist.\n" % path)
                     sys.exit(1)
-            else:
-                paths = args
+                paths.append(os.path.join(os.getcwd(), path, 'features'))
         else:
             paths = harvest_lettuces(apps_to_run, apps_to_avoid)  # list of tuples with (path, app_module)
 
