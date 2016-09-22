@@ -8,7 +8,13 @@ import re
 from django.core.management import call_command
 from django.core.management.color import no_style
 from django.db import connection
-from django.db.models.loading import get_models
+
+try:
+    from django.apps import apps
+    get_models = apps.get_models
+except ImportError:
+    from django.db.models.loading import get_models
+
 from django.utils.functional import curry
 from functools import wraps
 
