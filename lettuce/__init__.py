@@ -22,7 +22,6 @@ release = 'kryptonite'
 import os
 import sys
 import traceback
-import warnings
 try:
     from imp import reload
 except ImportError:
@@ -41,7 +40,7 @@ from lettuce.decorators import step, steps
 from lettuce.registry import call_hook
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
-from lettuce.exceptions import StepLoadingError
+from lettuce.exceptions import StepLoadingError, LettuceRunnerError
 from lettuce.plugins import (
     xunit_output,
     subunit_output,
@@ -81,7 +80,7 @@ except Exception as e:
 
         sys.stderr.write(string)
         sys.stderr.write(exceptions.traceback.format_exc(e))
-        raise SystemExit(1)
+        raise LettuceRunnerError(string)
 
 
 class Runner(object):
@@ -125,17 +124,11 @@ class Runner(object):
             from lettuce.plugins import dots as output
         elif verbosity is 2:
             from lettuce.plugins import scenario_names as output
-        else:
-            if verbosity is 4:
+        elif verbosity is 3:
+            if no_color:
+                from lettuce.plugins import shell_output as output
+            else:
                 from lettuce.plugins import colored_shell_output as output
-                msg = ('Deprecated in lettuce 2.2.21. Use verbosity 3 without '
-                       '--no-color flag instead of verbosity 4')
-                warnings.warn(msg, DeprecationWarning)
-            elif verbosity is 3:
-                if no_color:
-                    from lettuce.plugins import shell_output as output
-                else:
-                    from lettuce.plugins import colored_shell_output as output
 
         self.random = random
 
@@ -215,6 +208,6 @@ class Runner(object):
             call_hook('after', 'all', total)
 
             if failed:
-                raise SystemExit(2)
+                raise LettuceRunnerError("Test failed.")
 
             return total
