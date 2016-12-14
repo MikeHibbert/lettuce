@@ -350,6 +350,9 @@ try:
                     '{address}:{port}'.format(address=self.address,
                                               port=self.port)
             LiveServerTestCase.setUpClass()
+            
+            # now get the actual port that the test case was allocated
+            self.port = LiveServerTestCase.server_thread.port
 
             print "Django's builtin server is running at {address}:{port}".format(
                 address=self.address,
