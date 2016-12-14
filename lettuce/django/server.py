@@ -30,6 +30,7 @@ from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import WSGIServer
 from django.core.servers.basehttp import ServerHandler
 from django.core.servers.basehttp import WSGIRequestHandler
+from lettuce import world
 
 try:
     from django.core.servers.basehttp import AdminMediaHandler
@@ -245,9 +246,10 @@ class BaseServer(object):
     """
 
     def __init__(self, address='0.0.0.0', port=None, threading=True):
-        self.port = int(port or getattr(settings, 'LETTUCE_SERVER_PORT', 8000))
+        self.port = port or getattr(settings, 'LETTUCE_SERVER_PORT', '8081-8179')
         self.address = unicode(address)
         self.threading = threading
+        world.server = self
 
     def start(self):
         """
