@@ -171,6 +171,10 @@ class Command(BaseCommand):
 
             from django.test.utils import get_runner
             self._testrunner = get_runner(settings)(interactive=False)
+            
+            if DJANGO_VERSION > StrictVersion('1.10'):
+                self._testrunner.teardown_test_environment()
+                
             self._testrunner.setup_test_environment()
             self._old_db_config = self._testrunner.setup_databases()
 
